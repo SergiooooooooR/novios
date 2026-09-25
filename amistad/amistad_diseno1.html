@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestra Amistad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --paper:#FDEFD9;
+    --paper-dark:#F7DDAE;
+    --teal:#2FA7A0;
+    --teal-dark:#1F8A85;
+    --coral:#FF7A59;
+    --coral-dark:#E85A3B;
+    --ink:#2E2A26;
+    --yellow:#FFC857;
+    --deep-teal:#1B4B47;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body.locked{
+    overflow:hidden;
+    height:100vh;
+  }
+
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Quicksand', sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    line-height:1.15;
+  }
+
+  .signature{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+  }
+
+  section{
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:48px 24px;
+    text-align:center;
+  }
+
+  /* ---------- INICIO (rasca el vaho) ---------- */
+  #inicio{
+    background:
+      radial-gradient(circle at 50% 15%, rgba(255,255,255,.5), transparent 60%),
+      var(--paper);
+  }
+
+  #inicio h1{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:clamp(34px, 8vw, 46px);
+    color:var(--deep-teal);
+    max-width:320px;
+    margin-bottom:8px;
+  }
+
+  .fog-hint{
+    font-size:14px;
+    color:var(--teal-dark);
+    opacity:.85;
+    margin-bottom:26px;
+  }
+
+  .fog-frame{
+    position:relative;
+    width:min(280px, 80vw);
+    aspect-ratio:4/5;
+    border-radius:16px;
+    overflow:hidden;
+    border:6px solid #fff;
+    box-shadow:0 18px 40px rgba(46,42,38,.2);
+  }
+
+  .fog-frame img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .fog-frame canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    touch-action:none;
+    cursor:grab;
+  }
+
+  .fog-frame.cleared canvas{
+    opacity:0;
+    transition:opacity .8s ease;
+    pointer-events:none;
+  }
+
+  /* ---------- ALBUM ---------- */
+  #album{ background:var(--cream); }
+
+  .album-note{
+    font-size:20px;
+    color:var(--teal-dark);
+    max-width:340px;
+    margin-bottom:26px;
+    font-weight:600;
+  }
+
+  .carousel{
+    position:relative;
+    width:min(300px, 80vw);
+    aspect-ratio:4/5;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 18px 40px rgba(46,42,38,.2);
+    border:6px solid #fff;
+  }
+
+  .carousel-track{
+    display:flex;
+    height:100%;
+    transition:transform .4s cubic-bezier(.65,0,.35,1);
+  }
+
+  .carousel-track img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    flex:0 0 100%;
+  }
+
+  .carousel-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:36px; height:36px;
+    border-radius:50%;
+    background:rgba(255,255,255,.9);
+    border:none;
+    color:var(--coral-dark);
+    font-size:18px;
+    font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .carousel-arrow.prev{ left:10px; }
+  .carousel-arrow.next{ right:10px; }
+
+  .carousel-dots{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+  }
+  .carousel-dots span{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--paper-dark);
+    transition:background .2s ease, transform .2s ease;
+  }
+  .carousel-dots span.active{
+    background:var(--coral);
+    transform:scale(1.25);
+  }
+
+  .scroll-hint{
+    margin-top:40px;
+    font-size:14px;
+    color:var(--teal-dark);
+    opacity:.75;
+    font-weight:600;
+  }
+
+  /* ---------- CARTAS ---------- */
+  #cartas{ background:var(--teal); }
+
+  #cartas h2{
+    font-size:clamp(24px, 5vw, 32px);
+    color:#fff;
+    margin-bottom:6px;
+  }
+
+  .cartas-hint{
+    font-size:14px;
+    color:#fff;
+    opacity:.85;
+    margin-bottom:30px;
+    font-weight:600;
+  }
+
+  .cards-wrap{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:14px;
+    max-width:360px;
+    perspective:1000px;
+  }
+
+  .card{
+    width:90px;
+    height:120px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-style:preserve-3d;
+    transition:transform .6s cubic-bezier(.22,1,.36,1);
+    border-radius:12px;
+    box-shadow:0 10px 20px rgba(0,0,0,.18);
+  }
+
+  .card.flipped .card-inner{
+    transform:rotateY(180deg);
+  }
+
+  .card-face{
+    position:absolute;
+    inset:0;
+    border-radius:12px;
+    backface-visibility:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .card-front{
+    background:
+      repeating-linear-gradient(45deg, var(--coral), var(--coral) 8px, var(--coral-dark) 8px, var(--coral-dark) 16px);
+    border:3px solid #fff;
+  }
+
+  .card-front span{
+    font-size:28px;
+  }
+
+  .card-back{
+    transform:rotateY(180deg);
+    border:3px solid #fff;
+  }
+
+  .card-back img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  /* ---------- DEDICATORIA ---------- */
+  #dedicatoria{ background:var(--cream); }
+
+  .dedic-icon{
+    font-size:36px;
+    margin-bottom:14px;
+  }
+
+  .dedic-text{
+    max-width:340px;
+    font-size:19px;
+    color:var(--ink);
+  }
+
+  .dedic-farewell{
+    margin-top:20px;
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:28px;
+    color:var(--coral-dark);
+  }
+
+  .save-btn{
+    margin-top:36px;
+    background:var(--coral);
+    color:#fff;
+    border:none;
+    padding:14px 34px;
+    border-radius:999px;
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    letter-spacing:.01em;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(255,122,89,.4);
+    transition:transform .15s ease, background .2s ease;
+  }
+  .save-btn:active{ transform:scale(.96); }
+  .save-btn.saved{ background:var(--coral-dark); }
+
+  .toast{
+    position:fixed;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--ink);
+    color:var(--cream);
+    padding:10px 22px;
+    border-radius:999px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease, transform .3s ease;
+    z-index:50;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body class="locked">
+
+  <!-- ============ 1. INICIO (rasca el vaho) ============ -->
+  <section id="inicio">
+    <h1>Desliza y descubre la sorpresa</h1>
+    <p class="fog-hint">Desliza el dedo sobre la imagen</p>
+    <div class="fog-frame" id="fogFrame">
+      <img id="portadaFoto" src="" alt="Foto de portada">
+      <canvas id="fogCanvas"></canvas>
+    </div>
+  </section>
+
+  <!-- ============ 2. ALBUM ============ -->
+  <section id="album">
+    <p class="album-note" id="albumNota"></p>
+    <div class="carousel">
+      <div class="carousel-track" id="carouselTrack"></div>
+      <button class="carousel-arrow prev" id="carPrev">‹</button>
+      <button class="carousel-arrow next" id="carNext">›</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <p class="scroll-hint">Sigue bajando ↓</p>
+  </section>
+
+  <!-- ============ 3. CARTAS ============ -->
+  <section id="cartas">
+    <h2>Voltea las cartas</h2>
+    <p class="cartas-hint">Toca cada una para descubrir el recuerdo</p>
+    <div class="cards-wrap" id="cardsWrap"></div>
+  </section>
+
+  <!-- ============ 4. DEDICATORIA ============ -->
+  <section id="dedicatoria">
+    <p class="dedic-icon">🤍</p>
+    <p class="dedic-text" id="dedicText"></p>
+    <p class="dedic-farewell" id="dedicFarewell"></p>
+    <button class="save-btn" id="saveBtn">Guardar este recuerdo</button>
+  </section>
+
+  <div class="toast" id="toast">Enlace copiado</div>
+
+<script>
+/* =========================================================
+   CONFIGURA AQUÍ LOS DATOS DE CADA CLIENTE
+   (esta es la única sección que cambia por cliente)
+   ========================================================= */
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+window.addEventListener('load', () => window.scrollTo(0, 0));
+window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+
+const CONFIG = {
+  portadaFoto: "img/1.png",
+
+  albumNota: "Los momentos que solo nosotros entendemos.",
+  fotos: [
+    "img/4.png",
+    "img/6.png",
+    "img/5.png",
+    "img/2.png"
+  ],
+
+  cartasFotos: [
+    "img/3.png",
+    "img/4.png",
+    "img/5.png",
+    "img/6.png",
+    "img/1.png"
+  ],
+
+  dedicatoria: "De esas amistades que no se buscan, se encuentran. Gracias por cada risa, cada locura y cada momento que hace que la vida sea mejor a tu lado.",
+  despedida: "Amigos para siempre 💛"
+};
+
+/* =========================================================
+   LÓGICA — no necesitas tocar nada de aquí para abajo
+   ========================================================= */
+
+document.getElementById('portadaFoto').src = CONFIG.portadaFoto;
+document.getElementById('albumNota').textContent = CONFIG.albumNota;
+document.getElementById('dedicText').textContent = CONFIG.dedicatoria;
+document.getElementById('dedicFarewell').textContent = CONFIG.despedida;
+
+document.addEventListener('touchmove', (e) => {
+  if (document.body.classList.contains('locked')) e.preventDefault();
+}, { passive:false });
+
+document.addEventListener('wheel', (e) => {
+  if (document.body.classList.contains('locked')) e.preventDefault();
+}, { passive:false });
+
+// ---- 1. Rasca el vaho ----
+const fogFrame = document.getElementById('fogFrame');
+const fogCanvas = document.getElementById('fogCanvas');
+const fctx = fogCanvas.getContext('2d');
+let fogCleared = false;
+
+function drawFog(){
+  const w = fogCanvas.width, h = fogCanvas.height;
+  fctx.globalCompositeOperation = 'source-over';
+  fctx.fillStyle = 'rgba(255,255,255,.92)';
+  fctx.fillRect(0, 0, w, h);
+  // textura sutil tipo vaho
+  fctx.fillStyle = 'rgba(200,220,220,.5)';
+  for (let i = 0; i < 40; i++){
+    const rx = Math.random() * w;
+    const ry = Math.random() * h;
+    const r = 10 + Math.random() * 26;
+    fctx.beginPath();
+    fctx.arc(rx, ry, r, 0, Math.PI * 2);
+    fctx.fill();
+  }
+}
+
+function setupFog(){
+  const rect = fogFrame.getBoundingClientRect();
+  fogCanvas.width = rect.width;
+  fogCanvas.height = rect.height;
+  drawFog();
+}
+
+function scratchAt(x, y){
+  fctx.globalCompositeOperation = 'destination-out';
+  fctx.beginPath();
+  fctx.arc(x, y, Math.max(20, fogCanvas.width * .09), 0, Math.PI * 2);
+  fctx.fill();
+}
+
+function getPos(e){
+  const rect = fogCanvas.getBoundingClientRect();
+  const point = e.touches ? e.touches[0] : e;
+  return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+}
+
+let scratching = false;
+function handleStart(e){
+  if (fogCleared) return;
+  scratching = true;
+  handleMove(e);
+}
+function handleMove(e){
+  if (!scratching || fogCleared) return;
+  const { x, y } = getPos(e);
+  scratchAt(x, y);
+  checkFogProgress();
+}
+function handleEnd(){ scratching = false; }
+
+fogCanvas.addEventListener('mousedown', handleStart);
+fogCanvas.addEventListener('mousemove', handleMove);
+window.addEventListener('mouseup', handleEnd);
+fogCanvas.addEventListener('touchstart', handleStart, { passive:true });
+fogCanvas.addEventListener('touchmove', handleMove, { passive:true });
+fogCanvas.addEventListener('touchend', handleEnd);
+
+let lastCheck = 0;
+function checkFogProgress(){
+  const now = Date.now();
+  if (now - lastCheck < 150) return;
+  lastCheck = now;
+
+  const w = fogCanvas.width, h = fogCanvas.height;
+  const data = fctx.getImageData(0, 0, w, h).data;
+  const sampleGrid = 20;
+  const stepX = Math.max(1, Math.floor(w / sampleGrid));
+  const stepY = Math.max(1, Math.floor(h / sampleGrid));
+  let cleared = 0, total = 0;
+
+  for (let y = 0; y < h; y += stepY){
+    for (let x = 0; x < w; x += stepX){
+      const idx = (y * w + x) * 4 + 3;
+      total++;
+      if (data[idx] < 40) cleared++;
+    }
+  }
+
+  if (total && cleared / total > .62) finishFog();
+}
+
+function finishFog(){
+  fogCleared = true;
+  fogFrame.classList.add('cleared');
+  document.body.classList.remove('locked');
+  setTimeout(() => {
+    document.getElementById('album').scrollIntoView({ behavior:'smooth' });
+  }, 700);
+}
+
+window.addEventListener('resize', () => { if (!fogCleared) setupFog(); });
+setupFog();
+
+// ---- 2. Carrusel ----
+const track = document.getElementById('carouselTrack');
+const dotsWrap = document.getElementById('carouselDots');
+let current = 0;
+
+CONFIG.fotos.forEach((src, i) => {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = `Foto ${i + 1}`;
+  track.appendChild(img);
+
+  const dot = document.createElement('span');
+  if (i === 0) dot.classList.add('active');
+  dotsWrap.appendChild(dot);
+});
+
+function goToSlide(index){
+  const total = CONFIG.fotos.length;
+  current = (index + total) % total;
+  track.style.transform = `translateX(-${current * 100}%)`;
+  [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
+}
+
+document.getElementById('carPrev').addEventListener('click', () => goToSlide(current - 1));
+document.getElementById('carNext').addEventListener('click', () => goToSlide(current + 1));
+
+let touchStartX = null;
+track.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+track.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 40) goToSlide(current + (diff < 0 ? 1 : -1));
+  touchStartX = null;
+});
+
+// ---- 3. Cartas que se voltean ----
+const cardsWrap = document.getElementById('cardsWrap');
+
+CONFIG.cartasFotos.forEach((src, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  card.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-front"><span>🤍</span></div>
+      <div class="card-face card-back"><img src="${src}" alt="Recuerdo ${i + 1}"></div>
+    </div>
+  `;
+
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+  cardsWrap.appendChild(card);
+});
+
+// ---- 4. Guardar recuerdo ----
+const saveBtn = document.getElementById('saveBtn');
+const toast = document.getElementById('toast');
+
+saveBtn.addEventListener('click', async () => {
+  try{
+    await navigator.clipboard.writeText(window.location.href);
+  }catch(err){
+    const temp = document.createElement('input');
+    temp.value = window.location.href;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    temp.remove();
+  }
+  saveBtn.textContent = '¡Enlace copiado!';
+  saveBtn.classList.add('saved');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+  setTimeout(() => {
+    saveBtn.textContent = 'Guardar este recuerdo';
+    saveBtn.classList.remove('saved');
+  }, 2500);
+});
+</script>
+</body>
+</html>

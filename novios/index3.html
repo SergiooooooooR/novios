@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestra Sorpresa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=EB+Garamond:wght@400;500&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF2F4;
+    --paper:#F5E2E7;
+    --paper-dark:#EAC7D1;
+    --blush:#F2D9E0;
+    --rosewood:#A6335C;
+    --rosewood-dark:#832646;
+    --plum-ink:#402030;
+    --gold:#C79A6B;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body.locked{
+    overflow:hidden;
+    height:100vh;
+  }
+
+  body{
+    background:var(--cream);
+    color:var(--plum-ink);
+    font-family:'EB Garamond', serif;
+    font-size:18px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    line-height:1.15;
+  }
+
+  .signature{
+    font-family:'Parisienne', cursive;
+    font-weight:400;
+  }
+
+  section{
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:48px 24px;
+    text-align:center;
+  }
+
+  /* ---------- INICIO ---------- */
+  #inicio{
+    background:
+      radial-gradient(circle at 50% 20%, rgba(255,255,255,.5), transparent 60%),
+      var(--blush);
+    position:relative;
+  }
+
+  #inicio h1{
+    font-size:clamp(28px, 6vw, 40px);
+    font-style:italic;
+    max-width:320px;
+    margin-bottom:48px;
+    color:var(--rosewood-dark);
+  }
+
+  .hold-wrap{
+    position:relative;
+    width:150px;
+    height:150px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+  }
+
+  .hold-ring{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:conic-gradient(var(--rosewood) 0deg, rgba(255,255,255,.6) 0deg 360deg);
+    transition:background .05s linear;
+  }
+
+  .hold-inner{
+    position:absolute;
+    inset:12px;
+    border-radius:50%;
+    background:var(--blush);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:inset 0 2px 8px rgba(64,32,48,.1);
+    transition:transform .15s ease;
+  }
+
+  .hold-wrap.active .hold-inner{ transform:scale(.93); }
+
+  .hold-inner svg{
+    width:56px;
+    height:56px;
+    filter:drop-shadow(0 6px 14px rgba(166,51,92,.35));
+  }
+
+  .hold-label{
+    margin-top:26px;
+    font-size:14px;
+    letter-spacing:.02em;
+    color:var(--rosewood-dark);
+    opacity:.85;
+  }
+
+  #inicio.done .hold-wrap,
+  #inicio.done .hold-label{ opacity:0; pointer-events:none; }
+  #inicio.done .hold-wrap,
+  #inicio.done .hold-label{ transition:opacity .5s ease; }
+
+  /* ---------- DETALLE ---------- */
+  #detalle{ background:var(--cream); }
+
+  .eyebrow-note{
+    font-size:22px;
+    font-style:italic;
+    color:var(--rosewood-dark);
+    max-width:340px;
+    margin-bottom:28px;
+  }
+
+  .carousel{
+    position:relative;
+    width:min(320px, 84vw);
+    aspect-ratio:4/5;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 18px 40px rgba(64,32,48,.22);
+    border:6px solid #fff;
+  }
+
+  .carousel-track{
+    display:flex;
+    height:100%;
+    transition:transform .4s cubic-bezier(.65,0,.35,1);
+  }
+
+  .carousel-track img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    flex:0 0 100%;
+  }
+
+  .carousel-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:36px; height:36px;
+    border-radius:50%;
+    background:rgba(255,255,255,.85);
+    border:none;
+    color:var(--rosewood-dark);
+    font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .carousel-arrow.prev{ left:10px; }
+  .carousel-arrow.next{ right:10px; }
+
+  .carousel-dots{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+  }
+  .carousel-dots span{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--paper-dark);
+    transition:background .2s ease, transform .2s ease;
+  }
+  .carousel-dots span.active{
+    background:var(--rosewood);
+    transform:scale(1.25);
+  }
+
+  .detalle-intro{
+    max-width:360px;
+    margin-top:28px;
+    font-size:22px;
+  }
+
+  .scroll-hint{
+    margin-top:44px;
+    font-size:14px;
+    color:var(--rosewood-dark);
+    opacity:.75;
+  }
+
+  /* ---------- RASPA Y DESCUBRE ---------- */
+  #rasca{ background:var(--blush); }
+
+  #rasca h2{
+    font-size:clamp(24px, 5vw, 32px);
+    font-style:italic;
+    color:var(--rosewood-dark);
+    margin-bottom:8px;
+  }
+
+  .scratch-hint{
+    font-size:14px;
+    color:var(--rosewood-dark);
+    opacity:.8;
+    margin-bottom:26px;
+  }
+
+  .scratch-frame{
+    position:relative;
+    width:min(300px, 82vw);
+    aspect-ratio:4/5;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 18px 40px rgba(64,32,48,.22);
+    border:6px solid #fff;
+  }
+
+  .scratch-frame img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .scratch-frame canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    touch-action:none;
+    cursor:grab;
+  }
+
+  .scratch-frame.solved canvas{
+    opacity:0;
+    transition:opacity .7s ease;
+    pointer-events:none;
+  }
+
+  .scratch-caption{
+    margin-top:22px;
+    font-size:20px;
+    font-style:italic;
+    color:var(--rosewood-dark);
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .scratch-caption.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- CIERRE ---------- */
+  #cierre{ background:var(--cream); }
+
+  .polaroid{
+    background:#fff;
+    padding:14px 14px 40px 14px;
+    width:min(250px, 72vw);
+    box-shadow:0 18px 40px rgba(64,32,48,.25);
+    transform:rotate(-4deg) translateY(36px);
+    opacity:0;
+    transition:transform .8s cubic-bezier(.22,1,.36,1), opacity .8s ease;
+  }
+
+  .polaroid.in-view{
+    transform:rotate(-3deg) translateY(0);
+    opacity:1;
+  }
+
+  .polaroid img{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    display:block;
+  }
+
+  .polaroid-note{
+    font-family:'Parisienne', cursive;
+    font-size:20px;
+    text-align:center;
+    margin-top:10px;
+    color:var(--plum-ink);
+  }
+
+  .cierre-note{
+    max-width:340px;
+    margin-top:30px;
+    font-size:18px;
+  }
+
+  .cierre-farewell{
+    margin-top:18px;
+    font-size:20px;
+    font-style:italic;
+    color:var(--rosewood-dark);
+  }
+
+  .save-btn{
+    margin-top:36px;
+    background:var(--rosewood);
+    color:#fff;
+    border:none;
+    padding:14px 34px;
+    border-radius:999px;
+    font-family:'EB Garamond', serif;
+    font-size:17px;
+    letter-spacing:.02em;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(166,51,92,.35);
+    transition:transform .15s ease, background .2s ease;
+  }
+  .save-btn:active{ transform:scale(.96); }
+  .save-btn.saved{ background:var(--rosewood-dark); }
+
+  .toast{
+    position:fixed;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--plum-ink);
+    color:var(--cream);
+    padding:10px 22px;
+    border-radius:999px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease, transform .3s ease;
+    z-index:50;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body class="locked">
+
+  <!-- ============ 1. INICIO ============ -->
+  <section id="inicio">
+    <h1>Mantén presionado para descubrir tu sorpresa</h1>
+    <div class="hold-wrap" id="holdWrap">
+      <div class="hold-ring" id="holdRing"></div>
+      <div class="hold-inner">
+        <svg viewBox="0 0 32 29" fill="var(--rosewood)">
+          <path d="M23.6 0c-3 0-5.9 1.6-7.6 4.3C14.3 1.6 11.4 0 8.4 0 3.8 0 0 3.8 0 8.4c0 8.3 10.6 14.7 15.2 18.7.5.4 1.1.4 1.6 0C21.4 23.1 32 16.7 32 8.4 32 3.8 28.2 0 23.6 0z"/>
+        </svg>
+      </div>
+    </div>
+    <p class="hold-label" id="holdLabel">Mantén presionado 5 segundos</p>
+  </section>
+
+  <!-- ============ 2. DETALLE ============ -->
+  <section id="detalle">
+    <p class="eyebrow-note" id="introText"></p>
+    <div class="carousel">
+      <div class="carousel-track" id="carouselTrack"></div>
+      <button class="carousel-arrow prev" id="carPrev">‹</button>
+      <button class="carousel-arrow next" id="carNext">›</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <p class="detalle-intro" id="coupleIntro"></p>
+    <p class="scroll-hint">Sigue bajando ↓</p>
+  </section>
+
+  <!-- ============ 3. RASPA Y DESCUBRE ============ -->
+  <section id="rasca">
+    <h2>Raspa y descubre</h2>
+    <p class="scratch-hint">Desliza el dedo sobre la imagen</p>
+    <div class="scratch-frame" id="scratchFrame">
+      <img id="scratchPhoto" src="" alt="Foto sorpresa">
+      <canvas id="scratchCanvas"></canvas>
+    </div>
+    <p class="scratch-caption" id="scratchCaption">¡Descubierto! 💕</p>
+  </section>
+
+  <!-- ============ 4. CIERRE ============ -->
+  <section id="cierre">
+    <div class="polaroid" id="polaroid">
+      <img id="polaroidFoto" src="" alt="Foto importante">
+      <p class="polaroid-note" id="polaroidNota"></p>
+    </div>
+    <p class="cierre-note" id="cierreTexto"></p>
+    <p class="cierre-farewell" id="cierreDespedida"></p>
+    <button class="save-btn" id="saveBtn">Guardar este recuerdo</button>
+  </section>
+
+  <div class="toast" id="toast">Enlace copiado</div>
+
+<script>
+/* =========================================================
+   CONFIGURA AQUÍ LOS DATOS DE CADA PAREJA
+   (esta es la única sección que cambia por cliente)
+   ========================================================= */
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+window.addEventListener('load', () => window.scrollTo(0, 0));
+window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+
+const CONFIG = {
+  intro: "Aquí está tu sorpresa, disfrútala mucho.",
+
+  coupleIntro: "Dos personas, una historia que sigue escribiéndose cada día.",
+
+  fotos: [
+    "img/1.JPG",
+    "img/2.JPG",
+    "img/3.JPG",
+    "img/4.JPG"
+  ],
+
+  scratchFoto: "img/5.JPG",
+
+  polaroidFoto: "img/6.JPG",
+  polaroidNota: "Nuestro momento favorito",
+
+  cierreTexto: "Espero que hayas disfrutado este momento tanto como yo.",
+  cierreDespedida: "Con todo mi amor, una pequeña muestra de nuestra historia."
+};
+
+/* =========================================================
+   LÓGICA — no necesitas tocar nada de aquí para abajo
+   ========================================================= */
+
+// ---- Textos y fotos dinámicos ----
+document.getElementById('introText').textContent = CONFIG.intro;
+document.getElementById('coupleIntro').textContent = CONFIG.coupleIntro;
+document.getElementById('scratchPhoto').src = CONFIG.scratchFoto;
+document.getElementById('polaroidFoto').src = CONFIG.polaroidFoto;
+document.getElementById('polaroidNota').textContent = CONFIG.polaroidNota;
+document.getElementById('cierreTexto').textContent = CONFIG.cierreTexto;
+document.getElementById('cierreDespedida').textContent = CONFIG.cierreDespedida;
+
+// ---- 1. Mantén presionado ----
+const inicio = document.getElementById('inicio');
+const holdWrap = document.getElementById('holdWrap');
+const holdRing = document.getElementById('holdRing');
+const holdLabel = document.getElementById('holdLabel');
+
+const MAX_HOLD = 4000; // 5 segundos
+let holdStart = null;
+let holdRAF = null;
+let finished = false;
+
+document.addEventListener('touchmove', (e) => {
+  if (document.body.classList.contains('locked')) e.preventDefault();
+}, { passive:false });
+
+document.addEventListener('wheel', (e) => {
+  if (document.body.classList.contains('locked')) e.preventDefault();
+}, { passive:false });
+
+function updateRing(pct){
+  const deg = pct * 3.6;
+  holdRing.style.background =
+    `conic-gradient(var(--rosewood) ${deg}deg, rgba(255,255,255,.6) ${deg}deg 360deg)`;
+}
+
+function stepHold(){
+  const elapsed = performance.now() - holdStart;
+  const pct = Math.min(100, (elapsed / MAX_HOLD) * 100);
+  updateRing(pct);
+
+  if (pct >= 100){
+    finished = true;
+    inicio.classList.add('done');
+    document.body.classList.remove('locked');
+    setTimeout(() => {
+      document.getElementById('detalle').scrollIntoView({ behavior:'smooth' });
+    }, 500);
+    return;
+  }
+  holdRAF = requestAnimationFrame(stepHold);
+}
+
+function startHold(e){
+  if (finished) return;
+  e.preventDefault();
+  holdWrap.classList.add('active');
+  holdStart = performance.now();
+  holdRAF = requestAnimationFrame(stepHold);
+}
+
+function cancelHold(){
+  if (finished) return;
+  cancelAnimationFrame(holdRAF);
+  holdWrap.classList.remove('active');
+  updateRing(0);
+}
+
+holdWrap.addEventListener('mousedown', startHold);
+holdWrap.addEventListener('mouseup', cancelHold);
+holdWrap.addEventListener('mouseleave', cancelHold);
+holdWrap.addEventListener('touchstart', startHold, { passive:false });
+holdWrap.addEventListener('touchend', cancelHold);
+holdWrap.addEventListener('touchcancel', cancelHold);
+
+// ---- 2. Carrusel ----
+const track = document.getElementById('carouselTrack');
+const dotsWrap = document.getElementById('carouselDots');
+let current = 0;
+
+CONFIG.fotos.forEach((src, i) => {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = `Foto ${i + 1}`;
+  track.appendChild(img);
+
+  const dot = document.createElement('span');
+  if (i === 0) dot.classList.add('active');
+  dotsWrap.appendChild(dot);
+});
+
+function goToSlide(index){
+  const total = CONFIG.fotos.length;
+  current = (index + total) % total;
+  track.style.transform = `translateX(-${current * 100}%)`;
+  [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
+}
+
+document.getElementById('carPrev').addEventListener('click', () => goToSlide(current - 1));
+document.getElementById('carNext').addEventListener('click', () => goToSlide(current + 1));
+
+let touchStartX = null;
+track.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+track.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 40) goToSlide(current + (diff < 0 ? 1 : -1));
+  touchStartX = null;
+});
+
+// ---- 3. Raspa y descubre ----
+const scratchFrame = document.getElementById('scratchFrame');
+const scratchCanvas = document.getElementById('scratchCanvas');
+const scratchCaption = document.getElementById('scratchCaption');
+const sctx = scratchCanvas.getContext('2d');
+let scratchSolved = false;
+
+function drawScratchOverlay(){
+  const w = scratchCanvas.width, h = scratchCanvas.height;
+  sctx.globalCompositeOperation = 'source-over';
+  const grad = sctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, '#C79A6B');
+  grad.addColorStop(1, '#A6335C');
+  sctx.fillStyle = grad;
+  sctx.fillRect(0, 0, w, h);
+  sctx.fillStyle = 'rgba(255,255,255,.9)';
+  sctx.font = `italic ${Math.max(16, w * .09)}px 'Cormorant Garamond', serif`;
+  sctx.textAlign = 'center';
+  sctx.textBaseline = 'middle';
+  sctx.fillText('Raspa aquí', w / 2, h / 2);
+}
+
+function setupScratch(){
+  const rect = scratchFrame.getBoundingClientRect();
+  scratchCanvas.width = rect.width;
+  scratchCanvas.height = rect.height;
+  drawScratchOverlay();
+}
+
+function scratchAt(x, y){
+  sctx.globalCompositeOperation = 'destination-out';
+  sctx.beginPath();
+  sctx.arc(x, y, Math.max(18, scratchCanvas.width * .07), 0, Math.PI * 2);
+  sctx.fill();
+}
+
+function getPos(e){
+  const rect = scratchCanvas.getBoundingClientRect();
+  const point = e.touches ? e.touches[0] : e;
+  return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+}
+
+let scratching = false;
+function handleStart(e){
+  if (scratchSolved) return;
+  scratching = true;
+  handleMove(e);
+}
+function handleMove(e){
+  if (!scratching || scratchSolved) return;
+  e.preventDefault();
+  const { x, y } = getPos(e);
+  scratchAt(x, y);
+  checkScratchProgress();
+}
+function handleEnd(){ scratching = false; }
+
+scratchCanvas.addEventListener('mousedown', handleStart);
+scratchCanvas.addEventListener('mousemove', handleMove);
+window.addEventListener('mouseup', handleEnd);
+scratchCanvas.addEventListener('touchstart', handleStart, { passive:false });
+scratchCanvas.addEventListener('touchmove', handleMove, { passive:false });
+scratchCanvas.addEventListener('touchend', handleEnd);
+
+let lastCheck = 0;
+function checkScratchProgress(){
+  const now = Date.now();
+  if (now - lastCheck < 150) return;
+  lastCheck = now;
+
+  const w = scratchCanvas.width, h = scratchCanvas.height;
+  const data = sctx.getImageData(0, 0, w, h).data;
+  const sampleGrid = 20;
+  const stepX = Math.max(1, Math.floor(w / sampleGrid));
+  const stepY = Math.max(1, Math.floor(h / sampleGrid));
+  let cleared = 0, total = 0;
+
+  for (let y = 0; y < h; y += stepY){
+    for (let x = 0; x < w; x += stepX){
+      const idx = (y * w + x) * 4 + 3;
+      total++;
+      if (data[idx] < 40) cleared++;
+    }
+  }
+
+  if (total && cleared / total > .8) revealScratch();
+}
+
+function revealScratch(){
+  scratchSolved = true;
+  scratchFrame.classList.add('solved');
+  scratchCaption.classList.add('show');
+}
+
+window.addEventListener('resize', () => { if (!scratchSolved) setupScratch(); });
+setupScratch();
+
+// ---- 4. Polaroid con entrada ----
+const polaroid = document.getElementById('polaroid');
+const polaroidObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting){
+      polaroid.classList.add('in-view');
+      polaroidObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold:.35 });
+polaroidObserver.observe(polaroid);
+
+// ---- 5. Guardar recuerdo ----
+const saveBtn = document.getElementById('saveBtn');
+const toast = document.getElementById('toast');
+
+saveBtn.addEventListener('click', async () => {
+  try{
+    await navigator.clipboard.writeText(window.location.href);
+  }catch(err){
+    const temp = document.createElement('input');
+    temp.value = window.location.href;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    temp.remove();
+  }
+  saveBtn.textContent = '¡Enlace copiado!';
+  saveBtn.classList.add('saved');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+  setTimeout(() => {
+    saveBtn.textContent = 'Guardar este recuerdo';
+    saveBtn.classList.remove('saved');
+  }, 2500);
+});
+</script>
+</body>
+</html>

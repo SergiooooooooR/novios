@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Páginas para regalar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Figtree',system-ui,sans-serif;background:#f7f5f2;color:#2a2523;line-height:1.55;-webkit-font-smoothing:antialiased}
+main{max-width:34rem;margin:0 auto;padding:max(2.5rem,env(safe-area-inset-top)) 1.25rem max(3rem,env(safe-area-inset-bottom))}
+h1,h2{font-family:'Young Serif',Georgia,serif;font-weight:400;line-height:1.15}
+header{margin-bottom:2rem}
+header h1{font-size:clamp(2.1rem,8vw,2.8rem);margin-bottom:.6rem}
+header p{color:#6b625d}
+.tiles{display:grid;gap:1rem}
+.tile{display:block;text-decoration:none;background:var(--bg);color:var(--ink);padding:1.5rem 1.4rem 1.6rem;border-radius:22px;position:relative;overflow:hidden;transition:transform .2s ease}
+.tile::after{content:"";position:absolute;right:-2.2rem;bottom:-2.2rem;width:7rem;height:7rem;border-radius:50%;border:2px solid var(--acc);opacity:.35}
+.tile:hover,.tile:focus-visible{transform:translateY(-3px)}
+.tile:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.tile h2{font-size:1.9rem;margin-bottom:.35rem}
+.tile p{max-width:22rem;opacity:.85}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Páginas para regalar</h1>
+    <p>Elige una ocasión para ver sus diseños.</p>
+  </header>
+  <nav class="tiles" aria-label="Categorías">
+    <a class="tile" href="novios/" style="--bg:#f6d3df;--ink:#4a1d2e;--acc:#c2386b">
+      <h2>Novios</h2>
+      <p>Para decirle a tu pareja lo que significa para ti.</p>
+    </a>
+    <a class="tile" href="amistad/" style="--bg:#cdeae6;--ink:#1f3b3a;--acc:#e0624a">
+      <h2>Amistad</h2>
+      <p>Para esa persona que siempre ha estado ahí.</p>
+    </a>
+    <a class="tile" href="en_memoria_de/" style="--bg:#eadfc8;--ink:#3b2a22;--acc:#7a2e2e">
+      <h2>En memoria de</h2>
+      <p>Para que su recuerdo tenga un lugar que se pueda visitar.</p>
+    </a>
+  </nav>
+</main>
+</body>
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestra Sorpresa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=EB+Garamond:wght@400;500&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FDF1F3;
+    --paper:#F7E3E0;
+    --paper-dark:#EFCAC9;
+    --blush:#F5D6DC;
+    --rosewood:#C2265D;
+    --rosewood-dark:#9E1C49;
+    --plum-ink:#452334;
+    --gold:#C79A6B;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body.locked{
+    overflow:hidden;
+    height:100vh;
+  }
+
+  body{
+    background:var(--cream);
+    color:var(--plum-ink);
+    font-family:'EB Garamond', serif;
+    font-size:18px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    line-height:1.15;
+  }
+
+  .signature{
+    font-family:'Parisienne', cursive;
+    font-weight:400;
+  }
+
+  section{
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:48px 24px;
+    text-align:center;
+  }
+
+  /* ---------- INICIO ---------- */
+  #inicio{
+    background:
+      radial-gradient(circle at 50% 20%, rgba(255,255,255,.5), transparent 60%),
+      var(--blush);
+    position:relative;
+  }
+
+  #inicio h1{
+    font-size:clamp(28px, 6vw, 40px);
+    font-style:italic;
+    max-width:320px;
+    margin-bottom:12px;
+    color:var(--rosewood-dark);
+  }
+
+  .catch-label{
+    font-size:14px;
+    letter-spacing:.02em;
+    color:var(--rosewood-dark);
+    opacity:.8;
+    margin-bottom:32px;
+  }
+
+  .icon-arena{
+    position:relative;
+    width:min(260px, 78vw);
+    height:260px;
+  }
+
+  .heart-wrap{
+    position:absolute;
+    left:calc(50% - 32px);
+    top:calc(50% - 32px);
+    width:64px;
+    height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+    transition:left .22s cubic-bezier(.34,1.56,.64,1), top .22s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .heart-wrap svg{
+    width:56px;
+    height:56px;
+    transition:transform .12s ease;
+    filter:drop-shadow(0 6px 14px rgba(194,38,93,.35));
+  }
+
+  .heart-wrap:active svg{ transform:scale(.88); }
+
+  .heart-wrap.pulse svg{ animation:pulse .28s ease; }
+  @keyframes pulse{
+    0%{ transform:scale(1); }
+    40%{ transform:scale(1.22); }
+    100%{ transform:scale(1); }
+  }
+
+  .float-heart{
+    position:absolute;
+    pointer-events:none;
+    font-size:20px;
+    color:var(--rosewood);
+    opacity:0;
+    animation:floatUp 1s ease-out forwards;
+  }
+  @keyframes floatUp{
+    0%{ opacity:0; transform:translate(0,0) scale(.6); }
+    15%{ opacity:1; }
+    100%{ opacity:0; transform:translate(var(--dx), -120px) scale(1.1); }
+  }
+
+  #inicio.done .icon-arena,
+  #inicio.done .catch-label{ opacity:0; pointer-events:none; }
+  #inicio.done .icon-arena,
+  #inicio.done .catch-label{ transition:opacity .5s ease; }
+
+  /* ---------- DETALLE ---------- */
+  #detalle{ background:var(--cream); }
+
+  .eyebrow-note{
+    font-size:22px;
+    font-style:italic;
+    color:var(--rosewood-dark);
+    max-width:340px;
+    margin-bottom:28px;
+  }
+
+  .carousel{
+    position:relative;
+    width:min(320px, 84vw);
+    aspect-ratio:4/5;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 18px 40px rgba(69,35,52,.22);
+    border:6px solid #fff;
+  }
+
+  .carousel-track{
+    display:flex;
+    height:100%;
+    transition:transform .4s cubic-bezier(.65,0,.35,1);
+  }
+
+  .carousel-track img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    flex:0 0 100%;
+  }
+
+  .carousel-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:36px; height:36px;
+    border-radius:50%;
+    background:rgba(255,255,255,.85);
+    border:none;
+    color:var(--rosewood-dark);
+    font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .carousel-arrow.prev{ left:10px; }
+  .carousel-arrow.next{ right:10px; }
+
+  .carousel-dots{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+  }
+  .carousel-dots span{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--paper-dark);
+    transition:background .2s ease, transform .2s ease;
+  }
+  .carousel-dots span.active{
+    background:var(--rosewood);
+    transform:scale(1.25);
+  }
+
+  .detalle-intro{
+    max-width:360px;
+    margin-top:28px;
+    font-size:22px;
+  }
+
+  .scroll-hint{
+    margin-top:44px;
+    font-size:14px;
+    color:var(--rosewood-dark);
+    opacity:.75;
+  }
+
+  /* ---------- ROMPECABEZAS ---------- */
+  #rompecabezas{
+    background:var(--blush);
+  }
+
+  #rompecabezas h2{
+    font-size:clamp(24px, 5vw, 32px);
+    font-style:italic;
+    color:var(--rosewood-dark);
+    margin-bottom:8px;
+  }
+
+  .puzzle-hint{
+    font-size:14px;
+    color:var(--rosewood-dark);
+    opacity:.8;
+    margin-bottom:26px;
+  }
+
+  .puzzle-board{
+    position:relative;
+    width:min(300px, 82vw);
+    aspect-ratio:1/1;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-template-rows:repeat(3, 1fr);
+    gap:3px;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 18px 40px rgba(69,35,52,.22);
+    border:6px solid #fff;
+    background:var(--paper-dark);
+  }
+
+  .puzzle-tile{
+    background-image:var(--puzzle-img);
+    background-size:300% 300%;
+    cursor:pointer;
+    transition:filter .15s ease, transform .15s ease;
+  }
+
+  .puzzle-tile.selected{
+    filter:brightness(1.15);
+    transform:scale(.94);
+    outline:3px solid var(--rosewood);
+    outline-offset:-3px;
+  }
+
+  .puzzle-board.solved .puzzle-tile{
+    filter:brightness(1.05);
+  }
+
+  .puzzle-caption{
+    margin-top:22px;
+    font-size:20px;
+    font-style:italic;
+    color:var(--rosewood-dark);
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+
+  .puzzle-caption.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- CIERRE ---------- */
+  #cierre{ background:var(--cream); }
+
+  .cierre-media{
+    width:min(280px, 78vw);
+    border-radius:6px;
+    border:6px solid #fff;
+    box-shadow:0 18px 40px rgba(69,35,52,.22);
+    margin-bottom:30px;
+    overflow:hidden;
+  }
+
+  .cierre-media img,
+  .cierre-media video{
+    width:100%;
+    height:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    display:block;
+  }
+
+  .typewriter-wrap{
+    max-width:340px;
+    min-height:3.2em;
+  }
+
+  .typewriter{
+    font-size:18px;
+    display:inline;
+  }
+
+  .typewriter::after{
+    content:'|';
+    display:inline-block;
+    margin-left:2px;
+    color:var(--rosewood);
+    animation:blink 8s step-end infinite;
+  }
+
+  .typewriter-wrap.done .typewriter::after{
+    animation:none;
+    opacity:0;
+  }
+
+  @keyframes blink{
+    0%, 100%{ opacity:1; }
+    50%{ opacity:0; }
+  }
+
+  .cierre-farewell{
+    margin-top:18px;
+    font-size:20px;
+    font-style:italic;
+    color:var(--rosewood-dark);
+  }
+
+  .save-btn{
+    margin-top:36px;
+    background:var(--rosewood);
+    color:#fff;
+    border:none;
+    padding:14px 34px;
+    border-radius:999px;
+    font-family:'EB Garamond', serif;
+    font-size:17px;
+    letter-spacing:.02em;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(194,38,93,.35);
+    transition:transform .15s ease, background .2s ease;
+  }
+  .save-btn:active{ transform:scale(.96); }
+  .save-btn.saved{ background:var(--rosewood-dark); }
+
+  .toast{
+    position:fixed;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--plum-ink);
+    color:var(--cream);
+    padding:10px 22px;
+    border-radius:999px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease, transform .3s ease;
+    z-index:50;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body class="locked">
+
+  <!-- ============ 1. INICIO ============ -->
+  <section id="inicio">
+    <h1>Atrápalo antes de que se escape</h1>
+    <p class="catch-label" id="catchLabel">Tócalo 5 veces para descubrir tu sorpresa · 0 / 5</p>
+    <div class="icon-arena" id="iconArena">
+      <div class="heart-wrap" id="heartWrap">
+        <svg viewBox="0 0 32 29" fill="var(--rosewood)">
+          <path d="M23.6 0c-3 0-5.9 1.6-7.6 4.3C14.3 1.6 11.4 0 8.4 0 3.8 0 0 3.8 0 8.4c0 8.3 10.6 14.7 15.2 18.7.5.4 1.1.4 1.6 0C21.4 23.1 32 16.7 32 8.4 32 3.8 28.2 0 23.6 0z"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. DETALLE ============ -->
+  <section id="detalle">
+    <p class="eyebrow-note" id="introText"></p>
+    <div class="carousel">
+      <div class="carousel-track" id="carouselTrack"></div>
+      <button class="carousel-arrow prev" id="carPrev">‹</button>
+      <button class="carousel-arrow next" id="carNext">›</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <p class="detalle-intro" id="coupleIntro"></p>
+    <p class="scroll-hint">Sigue bajando ↓</p>
+  </section>
+
+  <!-- ============ 3. ROMPECABEZAS ============ -->
+  <section id="rompecabezas">
+    <h2>Arma el recuerdo</h2>
+    <p class="puzzle-hint">Toca dos piezas para intercambiarlas</p>
+    <div class="puzzle-board" id="puzzleBoard"></div>
+    <p class="puzzle-caption" id="puzzleCaption">¡Lo lograste! 💗</p>
+  </section>
+
+  <!-- ============ 4. CIERRE ============ -->
+  <section id="cierre">
+    <div class="cierre-media" id="cierreMedia"></div>
+    <div class="typewriter-wrap" id="typewriterWrap">
+      <span class="typewriter" id="typewriterText"></span>
+    </div>
+    <p class="cierre-farewell" id="cierreDespedida"></p>
+    <button class="save-btn" id="saveBtn">Guardar este recuerdo</button>
+  </section>
+
+  <div class="toast" id="toast">Enlace copiado</div>
+
+<script>
+/* =========================================================
+   CONFIGURA AQUÍ LOS DATOS DE CADA PAREJA
+   (esta es la única sección que cambia por cliente)
+   ========================================================= */
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+window.addEventListener('load', () => window.scrollTo(0, 0));
+window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+
+const CONFIG = {
+  intro: "Aquí está tu sorpresa, disfrútala mucho.",
+
+  coupleIntro: "Dos personas, una historia que sigue escribiéndose cada día.",
+
+  fotos: [
+    "img/1.JPG",
+    "img/2.JPG",
+    "img/3.JPG",
+    "img/4.JPG"
+  ],
+
+  puzzleFoto: "img/5.JPG",
+
+  // Deja cierreVideo en "" si quieres usar solo foto.
+  // Si pones una URL de video (.mp4), se usa el video en vez de la foto.
+  cierreFoto: "img/6.JPG",
+  cierreVideo: "",
+
+  cierreTextoTypewriter: "Espero que hayas disfrutado este momento tanto como yo.",
+  cierreDespedida: "Con todo mi amor, una pequeña muestra de nuestra historia."
+};
+
+/* =========================================================
+   LÓGICA — no necesitas tocar nada de aquí para abajo
+   ========================================================= */
+
+// ---- Textos dinámicos ----
+document.getElementById('introText').textContent = CONFIG.intro;
+document.getElementById('coupleIntro').textContent = CONFIG.coupleIntro;
+document.getElementById('cierreDespedida').textContent = CONFIG.cierreDespedida;
+
+// ---- Media del cierre (foto o video) ----
+const cierreMedia = document.getElementById('cierreMedia');
+if (CONFIG.cierreVideo){
+  const v = document.createElement('video');
+  v.src = CONFIG.cierreVideo;
+  v.autoplay = true;
+  v.muted = true;
+  v.loop = true;
+  v.playsInline = true;
+  cierreMedia.appendChild(v);
+} else {
+  const img = document.createElement('img');
+  img.src = CONFIG.cierreFoto;
+  img.alt = "Foto importante";
+  cierreMedia.appendChild(img);
+}
+
+// ---- 1. Corazón que se escapa ----
+const inicio = document.getElementById('inicio');
+const arena = document.getElementById('iconArena');
+const heartWrap = document.getElementById('heartWrap');
+const catchLabel = document.getElementById('catchLabel');
+
+const MAX_TAPS = 5;
+let heartTaps = 0;
+let finished = false;
+let lastX = null, lastY = null;
+
+document.addEventListener('touchmove', (e) => {
+  if (document.body.classList.contains('locked')) e.preventDefault();
+}, { passive:false });
+
+document.addEventListener('wheel', (e) => {
+  if (document.body.classList.contains('locked')) e.preventDefault();
+}, { passive:false });
+
+function spawnFloatingHeart(x, y){
+  const h = document.createElement('span');
+  h.className = 'float-heart';
+  h.textContent = '♥';
+  h.style.left = x + 'px';
+  h.style.top = y + 'px';
+  h.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+  inicio.appendChild(h);
+  setTimeout(() => h.remove(), 1000);
+}
+
+function placeHeartRandom(){
+  const size = 64;
+  const maxX = Math.max(arena.clientWidth - size, 0);
+  const maxY = Math.max(arena.clientHeight - size, 0);
+  let x, y, tries = 0;
+  do {
+    x = Math.random() * maxX;
+    y = Math.random() * maxY;
+    tries++;
+  } while (tries < 10 && lastX !== null && Math.hypot(x - lastX, y - lastY) < size);
+  lastX = x; lastY = y;
+  heartWrap.style.left = x + 'px';
+  heartWrap.style.top = y + 'px';
+}
+
+heartWrap.addEventListener('click', (e) => {
+  if (finished) return;
+  heartTaps++;
+  catchLabel.textContent = `Tócalo 5 veces para descubrir tu sorpresa · ${heartTaps} / ${MAX_TAPS}`;
+
+  heartWrap.classList.remove('pulse');
+  void heartWrap.offsetWidth;
+  heartWrap.classList.add('pulse');
+
+  const rect = heartWrap.getBoundingClientRect();
+  spawnFloatingHeart(rect.left + rect.width/2 - inicio.getBoundingClientRect().left,
+                      rect.top - inicio.getBoundingClientRect().top);
+
+  if (heartTaps >= MAX_TAPS){
+    finished = true;
+    inicio.classList.add('done');
+    document.body.classList.remove('locked');
+    setTimeout(() => {
+      document.getElementById('detalle').scrollIntoView({ behavior:'smooth' });
+    }, 600);
+  } else {
+    placeHeartRandom();
+  }
+});
+
+// ---- 2. Carrusel ----
+const track = document.getElementById('carouselTrack');
+const dotsWrap = document.getElementById('carouselDots');
+let current = 0;
+
+CONFIG.fotos.forEach((src, i) => {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = `Foto ${i + 1}`;
+  track.appendChild(img);
+
+  const dot = document.createElement('span');
+  if (i === 0) dot.classList.add('active');
+  dotsWrap.appendChild(dot);
+});
+
+function goToSlide(index){
+  const total = CONFIG.fotos.length;
+  current = (index + total) % total;
+  track.style.transform = `translateX(-${current * 100}%)`;
+  [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
+}
+
+document.getElementById('carPrev').addEventListener('click', () => goToSlide(current - 1));
+document.getElementById('carNext').addEventListener('click', () => goToSlide(current + 1));
+
+let touchStartX = null;
+track.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+track.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 40) goToSlide(current + (diff < 0 ? 1 : -1));
+  touchStartX = null;
+});
+
+// ---- 3. Rompecabezas 3x3 ----
+const puzzleBoard = document.getElementById('puzzleBoard');
+const puzzleCaption = document.getElementById('puzzleCaption');
+puzzleBoard.style.setProperty('--puzzle-img', `url("${CONFIG.puzzleFoto}")`);
+
+const GRID = 3;
+const positions = [0,1,2].flatMap(r => [0,1,2].map(c => `${c*50}% ${r*50}%`));
+
+let order = [...Array(GRID*GRID).keys()]; // guarda qué pieza (0-8) está en cada casilla
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+do { shuffle(order); } while (order.every((v, i) => v === i));
+
+let selectedTile = null;
+let solved = false;
+
+const tiles = order.map((pieceIndex) => {
+  const tile = document.createElement('div');
+  tile.className = 'puzzle-tile';
+  tile.dataset.piece = pieceIndex;
+  tile.style.backgroundPosition = positions[pieceIndex];
+  tile.addEventListener('click', () => onTileClick(tile));
+  puzzleBoard.appendChild(tile);
+  return tile;
+});
+
+function checkSolved(){
+  return tiles.every((tile, i) => Number(tile.dataset.piece) === i);
+}
+
+function onTileClick(tile){
+  if (solved) return;
+
+  if (selectedTile === tile){
+    tile.classList.remove('selected');
+    selectedTile = null;
+    return;
+  }
+
+  if (!selectedTile){
+    selectedTile = tile;
+    tile.classList.add('selected');
+    return;
+  }
+
+  // swap piezas entre la casilla seleccionada y la nueva
+  const tmp = selectedTile.dataset.piece;
+  selectedTile.dataset.piece = tile.dataset.piece;
+  tile.dataset.piece = tmp;
+  selectedTile.style.backgroundPosition = positions[selectedTile.dataset.piece];
+  tile.style.backgroundPosition = positions[tile.dataset.piece];
+
+  selectedTile.classList.remove('selected');
+  selectedTile = null;
+
+  if (checkSolved()){
+    solved = true;
+    puzzleBoard.classList.add('solved');
+    puzzleCaption.classList.add('show');
+  }
+}
+
+// ---- 4. Efecto máquina de escribir ----
+const typewriterWrap = document.getElementById('typewriterWrap');
+const typewriterText = document.getElementById('typewriterText');
+let typewriterStarted = false;
+
+function runTypewriter(){
+  if (typewriterStarted) return;
+  typewriterStarted = true;
+  const full = CONFIG.cierreTextoTypewriter;
+  let i = 0;
+  const speed = 32;
+  const interval = setInterval(() => {
+    i++;
+    typewriterText.textContent = full.slice(0, i);
+    if (i >= full.length){
+      clearInterval(interval);
+      typewriterWrap.classList.add('done');
+    }
+  }, speed);
+}
+
+const cierreObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) runTypewriter();
+  });
+}, { threshold:.4 });
+cierreObserver.observe(document.getElementById('cierre'));
+
+// ---- 5. Guardar recuerdo ----
+const saveBtn = document.getElementById('saveBtn');
+const toast = document.getElementById('toast');
+
+saveBtn.addEventListener('click', async () => {
+  try{
+    await navigator.clipboard.writeText(window.location.href);
+  }catch(err){
+    const temp = document.createElement('input');
+    temp.value = window.location.href;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    temp.remove();
+  }
+  saveBtn.textContent = '¡Enlace copiado!';
+  saveBtn.classList.add('saved');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+  setTimeout(() => {
+    saveBtn.textContent = 'Guardar este recuerdo';
+    saveBtn.classList.remove('saved');
+  }, 2500);
+});
+</script>
+</body>
+</html>
